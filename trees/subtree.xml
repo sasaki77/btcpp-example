@@ -1,0 +1,22 @@
+<root BTCPP_format="4">
+
+  <BehaviorTree ID="MainTree">
+    <Sequence name="root_sequence">
+      <SaySomething message="hello" />
+      <SubTree ID="Say5Times" />
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="Say5Times">
+    <Sequence>
+      <Script code=" num:=0 " />
+      <Repeat num_cycles="5">
+        <Sequence>
+          <SaySomething message="{num}" />
+          <Script code=" num:=num+1 " />
+        </Sequence>
+      </Repeat>
+    </Sequence>
+  </BehaviorTree>
+
+</root>

@@ -1,0 +1,11 @@
+<root BTCPP_format="4">
+    <include path="./subtree_a.xml" />
+    <include path="./subtree_b.xml" />
+    <BehaviorTree ID="MainTree">
+        <Sequence>
+            <SaySomething message="starting MainTree" />
+            <SubTree ID="SubTreeA" />
+            <SubTree ID="SubTreeB" />
+        </Sequence>
+    </BehaviorTree>
+</root>

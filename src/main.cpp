@@ -17,10 +17,26 @@ int main(int argc, char **argv)
   factory.registerNodeType<mybt::ApproachObject>("ApproachObject");
   factory.registerSimpleAction("CheckBattery", mybt::CheckBattery);
 
+  mybt::GripperInterface gripper;
+  factory.registerSimpleAction("OpenGripper", [&](BT::TreeNode &)
+                               { return gripper.open(); });
+  factory.registerSimpleAction("CloseGripper", [&](BT::TreeNode &)
+                               { return gripper.close(); });
+
+  factory.registerNodeType<mybt::SaySomething>("SaySomething");
+  factory.registerNodeType<mybt::ThinkWhatToSay>("ThinkWhatToSay");
+
+  factory.registerNodeType<mybt::CalculateGoal>("CalculateGoal");
+  factory.registerNodeType<mybt::PrintTarget>("PrintTarget");
+
+  factory.registerSimpleCondition("BatteryOK", mybt::CheckBattery);
+  factory.registerNodeType<mybt::MoveBaseAction>("MoveBase");
+
   BT::Tree tree;
   try
   {
-    tree = factory.createTreeFromFile(xml_path);
+    factory.registerBehaviorTreeFromFile(xml_path);
+    tree = factory.createTree("MainTree");
   }
   catch (const std::exception &e)
   {

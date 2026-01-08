@@ -5,6 +5,8 @@
       <CaGetAction pv_name="ET_SASAKI:TEST1" req_type="DBR_DOUBLE" count="1" timeout_ms="1000"
         result="{result}" />
       <ShowCAResult result="{result}" />
+      <CaPutAction pv_name="ET_SASAKI:TEST2" value="1" timeout_ms="1000" />
+      <SaySomething message="finished" />
     </Sequence>
   </BehaviorTree>
 </root>

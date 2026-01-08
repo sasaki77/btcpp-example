@@ -35,6 +35,7 @@ int main(int argc, char **argv)
   factory.registerNodeType<mybt::MoveBaseAction>("MoveBase");
 
   factory.registerNodeType<mybt::CaGetAction>("CaGetAction");
+  factory.registerNodeType<mybt::CaPutAction>("CaPutAction");
   factory.registerNodeType<mybt::ShowCAResult>("ShowCAResult");
 
   BT::Tree tree;

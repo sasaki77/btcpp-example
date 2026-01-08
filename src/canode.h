@@ -11,10 +11,25 @@ namespace mybt
     struct PVdata
     {
         int status = ECA_NORMAL;
-        std::vector<double> dbl; // 例: DOUBLE配列
-        std::string str;         // 例: STRING
-                                 // TODO: DBR_TIME_* なら timestamp / alarm を追加
+        std::variant<
+            double,
+            std::string>
+            value;
     };
+
+    inline std::string PVtoString(const std::variant<double, std::string> v)
+    {
+        return std::visit([](const auto &value) -> std::string
+                          {
+        using T = std::decay_t<decltype(value)>;
+        if constexpr (std::is_same_v<T, std::string>) {
+            return value;
+        } else { // double
+            std::ostringstream oss;
+            oss << std::setprecision(8) << value;
+            return oss.str();
+        } }, v);
+    }
 
     class CaGetAction : public BT::StatefulActionNode
     {

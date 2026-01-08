@@ -1,5 +1,5 @@
 #include "canode.h"
-#include <db_access.h> // DBR_* 定数
+#include <db_access.h>
 #include <stdexcept>
 
 namespace mybt
@@ -31,7 +31,7 @@ namespace mybt
                                    /*usr*/ nullptr, /*prio*/ CA_PRIORITY_DEFAULT, &chid_);
         if (st != ECA_NORMAL)
             throw std::runtime_error("ca_create_channel failed");
-        st = ca_pend_io(1.0); // 初回のみ接続待ち（conn cb を使わない簡易案）
+        st = ca_pend_io(1.0);
         if (st != ECA_NORMAL)
             throw std::runtime_error("pend_io connect timeout");
     }
@@ -50,13 +50,10 @@ namespace mybt
 
         ensureChannel(pv);
 
-        // 要求型の解決（例: DBR_DOUBLEのみ実装）
         chtype type = DBR_DOUBLE;
         if (req_type_str == "DBR_STRING")
             type = DBR_STRING;
-        // TODO: DBR_TIME_DOUBLE 等を必要に応じて
 
-        // 非同期GETを発行
         cancelled_.store(false);
         done_.store(false);
         ok_.store(false);
@@ -64,12 +61,11 @@ namespace mybt
             std::lock_guard<std::mutex> lk(mtx_);
             result_ = PVdata{};
         }
-        // user_arg に this を渡す
+
         int st = ca_array_get_callback(type, static_cast<unsigned long>(count),
                                        chid_, &CaGetAction::CAGetCallback, this);
         if (st != ECA_NORMAL)
         {
-            // 送出失敗（エンキュー失敗）
             return BT::NodeStatus::FAILURE;
         }
         ca_flush_io();
@@ -110,7 +106,7 @@ namespace mybt
         auto *self = static_cast<CaGetAction *>(args.usr);
         if (!self || self->cancelled_.load())
         {
-            return; // ハルト済みなら無視
+            return;
         }
         PVdata r;
         r.status = args.status;
@@ -119,13 +115,13 @@ namespace mybt
             if (args.type == DBR_STRING)
             {
                 auto p = static_cast<const dbr_string_t *>(args.dbr);
-                r.str = std::string(p[0]);
+                r.value = std::string(p[0]);
                 self->ok_.store(true);
             }
             else if (args.type == DBR_DOUBLE)
             {
                 auto p = static_cast<const dbr_double_t *>(args.dbr);
-                r.dbl.assign(p, p + args.count);
+                r.value = p[0];
                 self->ok_.store(true);
             }
             else
@@ -156,7 +152,7 @@ namespace mybt
 
         PVdata result = res.value();
         std::cout << "Status: " << result.status << std::endl;
-        std::cout << "Status: " << result.str << std::endl;
+        std::cout << "Status: " << PVtoString(result.value) << std::endl;
         return BT::NodeStatus::SUCCESS;
     }
 }

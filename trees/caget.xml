@@ -2,7 +2,7 @@
   <BehaviorTree ID="MainTree">
     <Sequence name="root_sequence">
       <SaySomething message="hello" />
-      <CaGetAction pv_name="ET_SASAKI:STR" req_type="DBR_STRING" count="1" timeout_ms="1000"
+      <CaGetAction pv_name="ET_SASAKI:TEST1" req_type="DBR_DOUBLE" count="1" timeout_ms="1000"
         result="{result}" />
       <ShowCAResult result="{result}" />
     </Sequence>

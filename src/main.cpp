@@ -1,5 +1,7 @@
 #include <behaviortree_cpp/bt_factory.h>
+#include <cadef.h>
 #include "mynodes.h"
+#include "canode.h"
 
 int main(int argc, char **argv)
 {
@@ -31,6 +33,9 @@ int main(int argc, char **argv)
 
   factory.registerSimpleCondition("BatteryOK", mybt::CheckBattery);
   factory.registerNodeType<mybt::MoveBaseAction>("MoveBase");
+
+  factory.registerNodeType<mybt::CaGetAction>("CaGetAction");
+  factory.registerNodeType<mybt::ShowCAResult>("ShowCAResult");
 
   BT::Tree tree;
   try
